@@ -1,4 +1,16 @@
 services:
+  app:
+    image: node:20-alpine
+    container_name: calc-get-ninjas
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "5173:5173"
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    stdin_open: true
+    tty: true
+
   spec-kit:
     build:
       context: .
@@ -9,6 +21,8 @@ services:
         RUN mkdir -p /workspace
         ENV PATH="/root/.local/bin:${PATH}"
     container_name: spec-kit
+    profiles:
+      - spec
     volumes:
       - .:/workspace
     working_dir: /workspace

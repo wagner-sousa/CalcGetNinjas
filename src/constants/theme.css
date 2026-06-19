@@ -1,0 +1,10 @@
+:root {
+  --bg: #D2D2D2;
+  --input-focus-border: #ffea52;
+  --btn-bg: #195ca9;
+  --btn-text: #ffffff;
+  --text-primary: #1a1a1a;
+  --text-secondary: #555555;
+  --error-color: #d32f2f;
+  --border-color: #cccccc;
+}

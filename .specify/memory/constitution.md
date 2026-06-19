@@ -1,19 +1,15 @@
 <!--
   Sync Impact Report
 
-  Version change: (template) → 1.0.0
-  Modified principles: N/A (initial fill)
-  Added sections:
-    - Core Principles (I-V)
-    - Technology Constraints
-    - Development Workflow
-    - Governance
+  Version change: 2.2.0 → 2.2.1
+  Modified principles: I (added Docker as development environment)
+  Added sections: Docker in Technology Constraints
   Removed sections: N/A
   Templates requiring updates:
-    - .specify/templates/constitution-template.md: ✅ aligned (source template)
     - .specify/templates/spec-template.md: ✅ compatible (generic structure)
     - .specify/templates/plan-template.md: ✅ compatible (no discipline-specific changes)
     - .specify/templates/tasks-template.md: ✅ compatible (follows standard layout)
+    - .specify/memory/constitution.md: ✅ updated (this file)
   Follow-up TODOs: None
 -->
 
@@ -21,17 +17,20 @@
 
 ## Core Principles
 
-### I. Web-First (Static SPA)
+### I. Vue SPA (Docker + Static Frontend)
 
-The application MUST be a single-page application (SPA) that runs entirely in the
-browser without any backend dependency. All logic MUST execute client-side using
-only HTML, CSS, and JavaScript served as static files.
+The application MUST be a single-page application (SPA) built with Vue 3 (Composition
+API, `<script setup>`) and TypeScript. Vite MUST be used as the build tool. The build
+output MUST be deployable as static files without a running backend. All development
+and build commands run inside Docker containers defined in `docker-compose.yml`.
+Node.js is a development toolchain dependency only (inside the container) — it MUST
+NOT be required at runtime.
 
-### II. Simplicity (No Frameworks)
+### II. Vue + TypeScript Stack
 
-Zero build tools and zero JavaScript frameworks. Use vanilla HTML5, CSS3, and
-vanilla JavaScript (ES modules if needed) ONLY. No bundler, transpiler, or
-package manager required.
+Vue 3 (Composition API) + TypeScript + Vite. Dependencies MUST be kept minimal.
+Third-party component libraries (e.g., PrimeVue, Vuetify) MUST NOT be used — only
+lightweight utility packages (icons, formatters) are permitted.
 
 ### III. Mobile-First Responsive Design (NON-NEGOTIABLE)
 
@@ -39,26 +38,38 @@ Every screen MUST work flawlessly on mobile (320px+) and desktop. CSS MUST use
 responsive design principles: media queries, relative units, flexbox/grid
 layouts. Touch interactions MUST be fully supported alongside mouse/keyboard.
 
-### IV. Test-First Calculation Logic
+### IV. Test-First Development (TDD)
 
-All calculation logic MUST have automated unit tests. Tests MUST be written
-before implementation (TDD) and MUST cover: coin-to-currency conversion,
-zero/negative input handling, decimal precision, and edge cases.
+The entire codebase follows Test-Driven Development. Tests MUST be written
+before implementation (red → green → refactor). For calculation logic, tests
+MUST cover: cost-per-coin calculation, activity-cost calculation, zero/negative
+input handling, decimal precision, and edge cases. All other modules
+(components, composables, utilities) MUST also have corresponding unit tests
+written before implementation.
 
-### V. Clean & Accessible UI
+### V. Clean & Accessible UI (pt-BR)
 
 The interface MUST be intuitive, professional, and accessible (WCAG AA
-minimum). Users MUST be able to complete the calculation in under 3 steps.
-Clear labels, visible error states, and unambiguous success feedback are
-required.
+minimum). All UI text — labels, tooltips, error messages, and feedback —
+MUST be in Brazilian Portuguese (pt-BR). Users MUST be able to complete the
+calculation in under 3 steps. Clear labels, visible error states, and
+unambiguous success feedback are required.
 
 ## Technology Constraints
 
-- Vanilla HTML, CSS, JS only — no React, Vue, Angular, or Svelte
-- No build step — files served directly via HTTP (no bundler)
-- All data stored in-memory (no persistence or backend required)
-- Use semantic HTML5 elements for screen reader compatibility
-- CSS custom properties (variables) encouraged for theming
+- **Runtime**: Vue 3 (Composition API, `<script setup>`)
+- **Language**: TypeScript
+- **Build**: Vite
+- **Icons**: Solar Icons (via npm)
+- **Testing**: Vitest (Vite-native test runner)
+- **CSS**: Custom properties (variables) for theming — `--bg: #D2D2D2`,
+  `--input-focus-border: #ffea52`, `--btn-bg: #195ca9`
+- **Persistence**: None — all data stored in-memory (no persistence or backend required)
+- **Packaging**: Built as static SPA via `vite build`, deployable to any static host
+- **No backend**: Zero server-side logic; all computation happens client-side
+- **Locale (UI)**: Brazilian Portuguese (pt-BR) — all user-facing strings, labels, tooltips, error messages, number/currency formatting, and date formats MUST follow Brazilian conventions
+- **Locale (Code)**: English — all source code identifiers, comments, commit messages, and documentation MUST be written in English
+- **Runtime Environment**: Docker — all development, build, and test commands run inside containers defined in `docker-compose.yml`. A Node.js service container provides the development toolchain.
 
 ## Development Workflow
 
@@ -79,4 +90,4 @@ required.
 - The constitution MUST be amended via documented proposals with version bumps
 - Use AGENTS.md and .specify/memory/ for runtime development guidance
 
-**Version**: 1.0.0 | **Ratified**: 2026-06-18 | **Last Amended**: 2026-06-18
+**Version**: 2.2.1 | **Ratified**: 2026-06-18 | **Last Amended**: 2026-06-18
