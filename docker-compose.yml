@@ -1,0 +1,17 @@
+services:
+  spec-kit:
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM python:latest
+        RUN pip install --no-cache-dir uv && \
+            uv tool install specify-cli --from git+https://github.com/github/spec-kit.git@v0.11.2
+        RUN mkdir -p /workspace
+        ENV PATH="/root/.local/bin:${PATH}"
+    container_name: spec-kit
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+    entrypoint: ["specify"]
+    stdin_open: true
+    tty: true
